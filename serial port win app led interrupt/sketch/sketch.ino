@@ -1,5 +1,4 @@
 int value;
-bool upValue = false;
 bool blink = false;
 
 void setup() {
@@ -7,64 +6,67 @@ void setup() {
   pinMode(13, OUTPUT);
   pinMode(12, OUTPUT);
   Serial.begin(9600);
-  attachInterrupt(0, interrupt, RISING);
+  attachInterrupt(0, interrupt, FALLING                                                                          );
 }
 
 void loop() {
   // put your main code here, to run repeatedly:
-  
   ReadSerial();
-  
-  if(upValue){
     switch(value){
-      case '1':
-            digitalWrite(13, HIGH);
-        break;
-      case '2':
-            digitalWrite(13, LOW);
-            break;
-        case '3':
-            digitalWrite(12, HIGH);
-            break;
-        case '4':
-            digitalWrite(12, LOW);
-            break;
-      case '5':
-            blink = true;
-        upValue= false;
-            break;
-        case '6':
-            blink = false;
-        digitalWrite(13, LOW);
-          digitalWrite(12, LOW);
-        upValue = false;
-            break;
+      case '1': // led1 on
+         digitalWrite(13, HIGH);
+         WriteSerial();
+         break;
+      case '2': // led1 off 
+         digitalWrite(13, LOW);
+         WriteSerial();
+         break;
+      case '3': // led2 on
+         digitalWrite(12, HIGH);
+         WriteSerial();
+         break;
+      case '4': // led2 off
+         digitalWrite(12, LOW);
+         WriteSerial();
+         break;
+      case '5': // blink on
+         blink = true;
+         WriteSerial();
+         break;
+      case '6': // blink off
+         blink = false;
+         digitalWrite(13, LOW);
+         digitalWrite(12, LOW);
+         WriteSerial();
+         break;
     }
-}
-  
+    
+
   if(blink){
     Blink();
   }
 }
 
-
 void ReadSerial(){
-  if(Serial.available() > 0){
+  if(Serial.available()){
     value = Serial.read();
-    upValue = true;
+   
   }
 }
 
+void WriteSerial(){
+  delay(200);
+  Serial.println("Islem basarili!");
+}
 
 void Blink(){
    digitalWrite(13, HIGH);
    digitalWrite(12, LOW);
-   delay(1000);
+   delay(500);
    digitalWrite(13, LOW);
    digitalWrite(12, HIGH);
-   delay(1000);
+   delay(500);
 }
-
 
 void interrupt(){
     blink = !blink;
