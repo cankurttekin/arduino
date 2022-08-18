@@ -13,6 +13,7 @@ void setup() {
 
 void loop() {
   if(Serial.available()){
+    lcd.clear();
     currentlyPlaying = Serial.readString();
   }
   lcd.clear();
